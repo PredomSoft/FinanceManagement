@@ -1,0 +1,47 @@
+[
+  {
+    "Number": 1,
+    "PlatformName": "Assetku",
+    "Tenor": "91.2501",
+    "Asset": "3.000.000",
+    "Discount": "500.000",
+    "ReturnRate": "0.205",
+    "Return": "717.500"
+  },
+  {
+    "Number": 2,
+    "PlatformName": "Investree",
+    "Tenor": "53",
+    "Asset": "1.000.000",
+    "Discount": "0",
+    "ReturnRate": "0.2",
+    "Return": "200.000"
+  },
+  {
+    "Number": 3,
+    "PlatformName": "Amartha",
+    "Tenor": "53",
+    "Asset": "1.000.000",
+    "Discount": "0",
+    "ReturnRate": "0.2",
+    "Return": "200.000"
+  },
+  {
+    "Number": 4,
+    "PlatformName": "EzCash",
+    "Tenor": "53",
+    "Asset": "1.000.000",
+    "Discount": "0",
+    "ReturnRate": "0.2",
+    "Return": "200.000"
+  },
+  {
+    "Number": 5,
+    "PlatformName": "EzCash",
+    "Tenor": "53",
+    "Asset": "1.000.000",
+    "Discount": "0",
+    "ReturnRate": "0.2",
+    "Return": "200.000"
+  }
+]
