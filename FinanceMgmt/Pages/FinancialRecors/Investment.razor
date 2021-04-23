@@ -1,0 +1,124 @@
+﻿@using System.Net.Http.Json
+@inject HttpClient httpClient
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Investment</MudText>
+
+<MudExpansionPanels>
+    <MudExpansionPanel>
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Material.Filled.FilterAlt" Color="Color.Info" class="mr-3"></MudIcon>
+                <MudText><strong>Filters</strong></MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <MudGrid>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudField Label="Platform Name" Variant="Variant.Outlined"></MudField>
+                </MudItem>
+            </MudGrid>
+            @*<MudDivider />*@
+            <div class="d-flex col-sm-12 float-lg-right">
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Autorenew" Color="Color.Error">Clear</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info">Search</MudButton>
+            </div>
+        </ChildContent>
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<InvestmentDto>>>(ServerReload))"
+          Dense="true" Hover="true" @ref="table">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Periodic Elements</MudText>
+        <MudToolBarSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Number</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="PlatformName" T="InvestmentDto">Platform Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Tenor" T="InvestmentDto">Tenor (Day)</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Asset" T="InvestmentDto">Asset</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Discount" T="InvestmentDto">Discount</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="ReturnRate" T="InvestmentDto">Return Rate</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Return" T="InvestmentDto">Return</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Number">@context.Number</MudTd>
+        <MudTd DataLabel="Platform Name">@context.PlatformName</MudTd>
+        <MudTd DataLabel="Tenor (Day)">@context.Tenor</MudTd>
+        <MudTd DataLabel="Asset">@context.Asset</MudTd>
+        <MudTd DataLabel="Discount">@context.Discount</MudTd>
+        <MudTd DataLabel="Return Rate">@context.ReturnRate</MudTd>
+        <MudTd DataLabel="Return">@context.Return</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    private IEnumerable<InvestmentDto> pagedData;
+    private MudTable<InvestmentDto> table;
+
+    private int totalItems;
+    private string searchString = null;
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+    private async Task<TableData<InvestmentDto>> ServerReload(TableState state)
+    {
+        IEnumerable<InvestmentDto> data = await httpClient.GetFromJsonAsync<List<InvestmentDto>>("webapi/periodictable");
+        data = data.Where(element =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (element.PlatformName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = data.Count();
+        switch (state.SortLabel)
+        {
+            case "PlatformName":
+                data = data.OrderByDirection(state.SortDirection, o => o.Number);
+                break;
+            case "Tenor":
+                data = data.OrderByDirection(state.SortDirection, o => o.Tenor);
+                break;
+            case "Asset":
+                data = data.OrderByDirection(state.SortDirection, o => o.Asset);
+                break;
+            case "Discount":
+                data = data.OrderByDirection(state.SortDirection, o => o.Discount);
+                break;
+            case "ReturnRate":
+                data = data.OrderByDirection(state.SortDirection, o => o.ReturnRate);
+                break;
+            case "Return":
+                data = data.OrderByDirection(state.SortDirection, o => o.Return);
+                break;
+        }
+
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        return new TableData<InvestmentDto>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+
+    private class InvestmentDto
+    {
+        public Int64 Number { get; set; }
+        public string PlatformName { get; set; }
+        public string Tenor { get; set; }
+        public string Asset { get; set; }
+        public string Discount { get; set; }
+        public string ReturnRate { get; set; }
+        public string Return { get; set; }
+    }
+}

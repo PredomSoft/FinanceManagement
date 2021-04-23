@@ -1,0 +1,213 @@
+﻿@page "/personal/dashboard"
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Dashboard</MudText>
+<MudGrid>
+    @*<MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.Euro" Color="Color.Primary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Total Cost</MudText>
+                    <MudText Typo="Typo.h5">3,125,000</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.Layers" Color="Color.Secondary" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Graphite on roof</MudText>
+                    <MudText Typo="Typo.h5">150,000</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.Public" Color="Color.Success" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Global Spread</MudText>
+                    <MudText Typo="Typo.h5">12%</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">Roentgen</MudText>
+                    <MudText Typo="Typo.h5">3,6</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="8">
+            <MudPaper Elevation="25" Class="pa-4" Style="height:300px;">
+                Charts comming soon ish...
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudPaper Elevation="25" Class="pa-4" Style="height:300px;">
+                Charts comming soon ish...
+            </MudPaper>
+        </MudItem>*@
+    <MudItem xs="12" sm="12" md="6">
+        <MudCard Elevation="25" Style="height:100%;">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    @*<MudIcon Icon="@Icons.Material.Filled.Euro" Color="Color.Primary" Class="mx-4" Style="width:30px; height:30px;"></MudIcon>*@
+                    <MudText Typo="Typo.h6">Investment Incomes</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent Class="px-0">
+                <MudSimpleTable Elevation="0" Hover="true">
+                    <thead>
+                        <tr>
+                            <th>Monthly</th>
+                            <th>Weekly</th>
+                            <th>Daily</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var report in earningReports.OrderBy(x => x.Monthly))
+                        {
+                            <tr>
+                                <td>
+                                    <MudText Typo="Typo.body2">@report.Monthly</MudText>
+                                </td>
+                                @*<td><MudChip Label="true" Color="@report.Severity" Size="Size.Small" Class="ml-auto mud-elevation-25">@report.SeverityTitle</MudChip></td>*@
+                                <td><MudText>@report.Weekly</MudText></td>
+                                <td><MudText>@report.Daily</MudText></td>
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" sm="12" md="6">
+        <MudCard Elevation="25" Style="height:100%;">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Total Investment Income (YoY)</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent Class="px-0">
+                <MudSimpleTable Elevation="0" Hover="true">
+                    <thead>
+                        <tr>
+                            <th>Total Return</th>
+                            <th>Total Investment</th>
+                            <th>Total Asset</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var report in totInvestReports.OrderBy(x => x.TotAsset))
+                        {
+                            <tr>
+                                <td>
+                                    <MudText Typo="Typo.body2">@report.TotReturn</MudText>
+                                </td>
+                                @*<td><MudChip Label="true" Color="@report.Severity" Size="Size.Small" Class="ml-auto mud-elevation-25">@report.SeverityTitle</MudChip></td>*@
+                                <td><MudText>@report.TotInvestment</MudText></td>
+                                <td><MudText>@report.TotAsset</MudText></td>
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" sm="12" md="6">
+        <MudCard Elevation="25" Style="height:100%;">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Investment Incomes (YoY)</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent Class="px-0">
+                <MudSimpleTable Elevation="0" Hover="true">
+                    <thead>
+                        <tr>
+                            <th>Platform Name</th>
+                            <th>Total Return</th>
+                            <th>Total Investment</th>
+                            <th>Total Asset</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var report in investReport.OrderBy(x => x.TotAsset))
+                        {
+                            <tr>
+                                <td><MudText>@report.PlatformName</MudText></td>
+                                <td>
+                                    <MudText>@report.TotReturn</MudText>
+                                </td>
+                                @*<td><MudChip Label="true" Color="@report.Severity" Size="Size.Small" Class="ml-auto mud-elevation-25">@report.SeverityTitle</MudChip></td>*@
+                                <td><MudText>@report.TotInvestment</MudText></td>
+                                <td><MudText>@report.TotAsset</MudText></td>
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+
+    EarningReport[] earningReports = new EarningReport[]
+    {
+        new EarningReport
+        {
+            Monthly = "742,027",
+            Weekly = "170,768",
+            Daily = "24,395"
+        },
+    };
+
+    class EarningReport
+    {
+        public string Monthly;
+        public string Weekly;
+        public string Daily;
+    }
+
+    TotInvestReport[] totInvestReports = new TotInvestReport[]
+    {
+        new TotInvestReport
+        {
+            TotAsset = "47,034,322",
+            TotInvestment = "38,130,000",
+            TotReturn = "8,904,322"
+        }
+    };
+
+    class TotInvestReport
+    {
+        public string TotReturn;
+        public string TotInvestment;
+        public string TotAsset;
+    }
+
+    InvestReport[] investReport = new InvestReport[]
+    {
+        new InvestReport
+        {
+            PlatformName = "Asetku",
+            TotReturn = "2,277,500",
+            TotInvestment = "9,000,000",
+            TotAsset = "11,277,500"
+        },
+        new InvestReport
+        {
+            PlatformName = "Amartha",
+            TotReturn = "330,822",
+            TotInvestment = "3,000,000",
+            TotAsset = "3,330,822"
+        }
+    };
+
+    class InvestReport: TotInvestReport
+    {
+        public string PlatformName;
+    }
+}
