@@ -1,6 +1,8 @@
 ﻿@using System.Net.Http.Json
 @inject HttpClient httpClient
 
+@page "/financialrecords/investment"
+
 <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Investment</MudText>
 
 <MudExpansionPanels>
@@ -14,13 +16,17 @@
         <ChildContent>
             <MudGrid>
                 <MudItem xs="12" sm="6" md="4">
-                    <MudField Label="Platform Name" Variant="Variant.Outlined"></MudField>
+                    <MudTextField T="string" @bind-Value="@searchVal" Placeholder="Search" Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                 </MudItem>
             </MudGrid>
-            @*<MudDivider />*@
-            <div class="d-flex col-sm-12 float-lg-right">
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Autorenew" Color="Color.Error">Clear</MudButton>
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info">Search</MudButton>
+            <MudDivider />
+            <div class="d-flex">
+                <center>
+                    @*<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Autorenew" Color="Color.Error">Clear</MudButton>
+                    <br/>*@
+                    <MudButton Variant="Variant.Filled" OnClick="@(=>OnSearch())" StartIcon="@Icons.Material.Filled.Search" Color="Color.Info">Search</MudButton>
+                </center>
             </div>
         </ChildContent>
     </MudExpansionPanel>
@@ -29,10 +35,10 @@
 <MudTable ServerData="@(new Func<TableState, Task<TableData<InvestmentDto>>>(ServerReload))"
           Dense="true" Hover="true" @ref="table">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Periodic Elements</MudText>
-        <MudToolBarSpacer />
+        <MudText Typo="Typo.h6">Data</MudText>
+        @*<MudToolBarSpacer />
         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>*@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Number</MudTh>
@@ -63,13 +69,14 @@
 
     private int totalItems;
     private string searchString = null;
+    private string searchVal { get; set; }
 
     /// <summary>
     /// Here we simulate getting the paged, filtered and ordered data from the server
     /// </summary>
     private async Task<TableData<InvestmentDto>> ServerReload(TableState state)
     {
-        IEnumerable<InvestmentDto> data = await httpClient.GetFromJsonAsync<List<InvestmentDto>>("webapi/periodictable");
+        IEnumerable<InvestmentDto> data = await httpClient.GetFromJsonAsync<List<InvestmentDto>>("sample-data/investment.json");
         data = data.Where(element =>
         {
             if (string.IsNullOrWhiteSpace(searchString))
@@ -105,9 +112,9 @@
         return new TableData<InvestmentDto>() { TotalItems = totalItems, Items = pagedData };
     }
 
-    private void OnSearch(string text)
+    private void OnSearch()
     {
-        searchString = text;
+        searchString = searchVal;
         table.ReloadServerData();
     }
 
